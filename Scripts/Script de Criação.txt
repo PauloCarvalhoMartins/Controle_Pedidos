@@ -1,0 +1,31 @@
+create database ConPedido
+
+CREATE TABLE `Clientes` (
+      `Codigo`              smallint NOT NULL AUTO_INCREMENT,
+      `Nome`                varchar(50),
+      `Cidade`              varchar(30),
+      `Estado`              varchar(2),
+      CONSTRAINT Clientes_pkey PRIMARY KEY (Codigo));
+      
+CREATE TABLE `Produtos` (
+      `Codigo`              smallint NOT NULL AUTO_INCREMENT,
+      `Descricao`           varchar(50),
+      `PrecoVenda`          numeric(10,2),     
+      CONSTRAINT Produtos_pkey PRIMARY KEY (Codigo)); 
+     
+CREATE TABLE `Pedidos` (
+      `NumPedido`              smallint NOT NULL AUTO_INCREMENT,
+      `DtEmissao`              datetime,
+      `CodCliente`             smallint,
+      `VlTotal`                numeric(10,2),
+      CONSTRAINT Pedidos_pkey PRIMARY KEY (NumPedido));
+      
+CREATE TABLE `ItensPedidos` (
+      `Codigo`              smallint NOT NULL AUTO_INCREMENT,
+      `NumPedido`           smallint,
+      `CodProduto`          smallint,
+      `Quantidade`          integer,
+      `VlUnitario`          numeric(10,2),
+      `VlTotal`             numeric(10,2),
+      CONSTRAINT ItensPedidos_pkey PRIMARY KEY (Codigo),
+      CONSTRAINT FK_ItensPedidos_Pedidos FOREIGN KEY (NumPedido) references Pedidos(NumPedido));

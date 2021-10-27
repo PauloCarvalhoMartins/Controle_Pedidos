@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2021/08/29 10:28:08.000.871,=C:\Users\Paulo Carvalho\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2021/10/25 19:11:27.000.351,=C:\Users\Paulo Carvalho\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2021/10/25 19:17:31.000.256,C:\Users\Paulo Carvalho\Documents\Embarcadero\Studio\Projects\uFrmPedidos.pas=C:\Users\Paulo Carvalho\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2021/10/25 19:17:31.000.256,C:\Users\Paulo Carvalho\Documents\Embarcadero\Studio\Projects\uFrmPedidos.dfm=C:\Users\Paulo Carvalho\Documents\Embarcadero\Studio\Projects\Unit1.dfm</Transaction>
+    <Transaction>2021/10/25 19:18:55.000.715,C:\Projetos\Pedidos.dproj=C:\Users\Paulo Carvalho\Documents\Embarcadero\Studio\Projects\Project1.dproj</Transaction>
+    <Transaction>2021/10/25 19:19:22.000.655,C:\Projetos\ConPedido\uFrmPedidos.pas=C:\Users\Paulo Carvalho\Documents\Embarcadero\Studio\Projects\uFrmPedidos.pas</Transaction>
+    <Transaction>2021/10/25 19:19:22.000.655,C:\Projetos\ConPedido\uFrmPedidos.dfm=C:\Users\Paulo Carvalho\Documents\Embarcadero\Studio\Projects\uFrmPedidos.dfm</Transaction>
+    <Transaction>2021/10/25 19:22:07.000.759,=C:\Projetos\Unit1.pas</Transaction>
+    <Transaction>2021/10/25 19:22:45.000.527,C:\Projetos\ConPedido\uDMPedidos.pas=C:\Projetos\Unit1.pas</Transaction>
+    <Transaction>2021/10/25 19:22:45.000.527,C:\Projetos\ConPedido\uDMPedidos.dfm=C:\Projetos\Unit1.dfm</Transaction>
+    <Transaction>2021/10/25 22:15:09.000.840,=C:\Projetos\ConPedido\uFrmPedidos.pas</Transaction>
+    <Transaction>2021/10/25 22:15:09.000.438,=C:\Projetos\ConPedido\uDMPedidos.pas</Transaction>
+    <Transaction>2021/10/26 07:24:08.000.709,=C:\Projetos\1Click\ConPedido\Source\View\uFrmPedidos.pas</Transaction>
+    <Transaction>2021/10/26 07:24:15.000.433,=C:\Projetos\1Click\ConPedido\Source\Providers\uDMPedidos.pas</Transaction>
+    <Transaction>2021/10/26 08:48:30.000.689,=C:\Projetos\1Click\ConPedido\Unit1.pas</Transaction>
+    <Transaction>2021/10/26 08:58:26.000.198,=C:\Projetos\1Click\ConPedido\Unit2.pas</Transaction>
+    <Transaction>2021/10/26 09:02:00.000.234,C:\Projetos\1Click\ConPedido\Unit1.pas=C:\Projetos\1Click\ConPedido\Source\Service\Service.Clientes.pas</Transaction>
+    <Transaction>2021/10/26 09:08:25.000.745,=C:\Projetos\1Click\ConPedido\Unit1.pas</Transaction>
+    <Transaction>2021/10/26 09:16:14.000.446,C:\Projetos\1Click\ConPedido\Unit1.pas=C:\Projetos\1Click\ConPedido\Source\Service\Service.Produtos.pas</Transaction>
+    <Transaction>2021/10/26 09:30:20.000.256,=C:\Projetos\1Click\ConPedido\Unit1.pas</Transaction>
+    <Transaction>2021/10/26 09:36:44.000.897,C:\Projetos\1Click\ConPedido\Unit1.pas=C:\Projetos\1Click\ConPedido\Source\Service\Service.Pedidos.pas</Transaction>
+    <Transaction>2021/10/26 09:43:21.000.774,=C:\Projetos\1Click\ConPedido\Unit1.pas</Transaction>
+    <Transaction>2021/10/26 09:47:40.000.848,C:\Projetos\1Click\ConPedido\Unit1.pas=C:\Projetos\1Click\ConPedido\Source\Service\Service.ItensPedidos.pas</Transaction>
+    <Transaction>2021/10/26 09:47:59.000.854,=C:\Projetos\1Click\ConPedido\Unit1.pas</Transaction>
+    <Transaction>2021/10/26 09:48:25.000.928,C:\Projetos\1Click\ConPedido\Unit1.pas=C:\Projetos\1Click\ConPedido\Source\Controller\Controller.Biblioteca.pas</Transaction>
+    <Transaction>2021/10/26 11:30:18.000.447,=C:\Projetos\1Click\ConPedido\Unit1.pas</Transaction>
+    <Transaction>2021/10/26 11:30:43.000.533,=C:\Projetos\1Click\ConPedido\Unit1.pas</Transaction>
+    <Transaction>2021/10/26 14:32:39.000.241,=C:\Projetos\1Click\ConPedido\Source\View\uFrmConsulta.pas</Transaction>
+  </Transactions>
+</BorlandProject>

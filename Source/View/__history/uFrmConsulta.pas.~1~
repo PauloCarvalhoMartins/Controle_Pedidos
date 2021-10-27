@@ -1,0 +1,240 @@
+unit uFrmConsulta;
+
+interface
+
+uses
+  Windows,
+  Messages,
+  SysUtils,
+  Variants,
+  Classes,
+  Graphics,
+  Controls,
+  Forms,
+  Dialogs,
+  StdCtrls,
+  Buttons,
+  Mask,
+  DBCtrls,
+  ExtCtrls,
+  Vcl.Grids,
+  Vcl.DBGrids,
+
+  Data.DB,
+  ZAbstractRODataset,
+  ZAbstractDataset,
+  ZDataset,
+
+  FcEdit,
+  FcMaskEdit,
+
+  ulibrary;
+
+type
+  Tfrmconsulta = class(TForm)
+    PnlPrincipal: TPanel;
+    PnlBotoes: TPanel;
+    PnlCancelar: TPanel;
+    BntCancelar: TSpeedButton;
+    PnlConfirma: TPanel;
+    BntConfirma: TSpeedButton;
+    PnlPesquisa: TPanel;
+    IgView: TImage;
+    GroupBoxpesq: TGroupBox;
+    MskPesquisa: TFcMaskEdit;
+    GrdListagem: TDBGrid;
+    DsListagem: TDataSource;
+    QryListagem: TZQuery;
+    procedure BntConfirmaClick(Sender: TObject);
+    procedure BntCancelarClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure GrdListagemDblClick(Sender: TObject);
+    procedure GrdListagemDrawColumnCell(Sender: TObject; const Rect: TRect;
+      DataCol: Integer; Column: TColumn; State: TGridDrawState);
+    procedure GrdListagemKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure GrdListagemTitleClick(Column: TColumn);
+    procedure MskPesquisaChange(Sender: TObject);
+  private
+    { Private declarations }
+    SelectOriginal:string;
+    IndiceAtual:string;
+    procedure BloqueiaCTRL_DEL_DBGrid(var Key: Word; Shift: TShiftState);
+    procedure ExibirLabelIndice(aCampo: string; aLabel: TGroupBox);
+    procedure LimparEdits;
+    procedure ConfigurarCampos;
+    procedure NomeiaTituloGrid;
+    function  RetornarCampoTraduzido(Campo: string): string;
+  public
+    { Public declarations }
+    TituloFrm:String;
+    SqlText  :String;
+    Titulo1  :String;
+    Titulo2  :String;
+    Campo1   :String;
+    Campo2   :String;
+    Tamanho1 :integer;
+    Tamanho2 :Integer;
+    Resultado:String;
+    bCancelou: Boolean;
+  end;
+
+var
+  frmconsulta: Tfrmconsulta;
+
+implementation
+
+{$R *.dfm}
+
+uses uDMPrincipal;
+
+{ TFrmDialogo }
+
+procedure Tfrmconsulta.BloqueiaCTRL_DEL_DBGrid(var Key: Word;
+  Shift: TShiftState);
+begin
+  if (Shift = [ssCtrl]) and (Key = 46) then
+      Key := 0;
+end;
+
+procedure Tfrmconsulta.ExibirLabelIndice(aCampo: string; aLabel: TGroupBox);
+begin
+ aLabel.Caption:='Pesquisar por ' + RetornarCampoTraduzido(aCampo)+':';
+end;
+
+procedure Tfrmconsulta.LimparEdits;
+Var i:Integer;
+begin
+  for i := 0 to ComponentCount -1 do begin
+    if (Components[i] is TLabeledEdit) then
+      TLabeledEdit(Components[i]).Text:=EmptyStr
+    else if (Components[i] is TEdit) then
+      TEdit(Components[i]).Text:=''
+    else if (Components[i] is TDBLookupComboBox) then
+      TDBLookupComboBox(Components[i]).KeyValue:=Null
+    else if (Components[i] is TMemo) then
+      TMemo(Components[i]).Text:=''
+    else if (Components[i] is TMaskEdit) then
+      TMaskEdit(Components[i]).Text:=''
+    else if (Components[i] is TImage) then begin
+      if TImage(Components[i]).Tag=1 then begin
+         TImage(Components[i]).Picture.Assign(nil);
+      end;
+    end;
+  end;
+end;
+
+procedure Tfrmconsulta.NomeiaTituloGrid;
+begin
+ qryListagem.Fields[0].DisplayLabel:=Titulo1;
+ qryListagem.Fields[1].DisplayLabel:=Titulo2;
+end;
+
+procedure Tfrmconsulta.ConfigurarCampos;
+begin
+  grdListagem.Columns.Add();
+  grdListagem.Columns[0].FieldName:=Campo1;
+  grdListagem.Columns[0].Width:= Tamanho1;
+
+  grdListagem.Columns.Add();
+  grdListagem.Columns[1].FieldName:=Campo2;
+  grdListagem.Columns[1].Width:= Tamanho2;
+end;
+
+function Tfrmconsulta.RetornarCampoTraduzido(Campo: string): string;
+var i:Integer;
+begin
+  for I := 0 to QryListagem.FieldCount-1 do begin
+    if LowerCase(QryListagem.Fields[i].FieldName) = LowerCase(Campo) then begin
+       Result:=QryListagem.Fields[i].DisplayLabel;
+       Break;
+    end;
+  end;
+end;
+
+procedure Tfrmconsulta.FormCreate(Sender: TObject);
+begin
+ QryListagem.Connection:=DmPrincipal.ZConexao;
+
+ grdListagem.Options:=[dgTitles,
+                       dgIndicator,
+                       dgColumnResize,
+                       dgColLines,
+                       dgRowLines,
+                       dgTabs,
+                       dgRowSelect,
+                       dgAlwaysShowSelection,
+                       dgCancelOnExit,
+                       dgTitleClick];
+end;
+
+procedure Tfrmconsulta.FormShow(Sender: TObject);
+begin
+ FrmConsulta.Caption:=TituloFrm;
+ QryListagem.SQL.Text:= SqlText;
+ IndiceAtual:=Campo1;
+
+  if QryListagem.SQL.Text<>EmptyStr then
+    begin
+      SelectOriginal:=QryListagem.SQL.Text;
+      QryListagem.Open;
+      NomeiaTituloGrid;
+      ConfigurarCampos;
+      QryListagem.IndexFieldNames:=IndiceAtual;
+      ExibirLabelIndice(IndiceAtual, GroupBoxPesq);
+    end;
+end;
+
+procedure Tfrmconsulta.BntCancelarClick(Sender: TObject);
+begin
+  LimparEdits;
+  bCancelou:=False;
+  Close;
+end;
+
+procedure Tfrmconsulta.BntConfirmaClick(Sender: TObject);
+begin
+  Resultado:=QryListagem.Fields[2].AsString;
+  LimparEdits;
+  bCancelou:=True;
+  Close;
+end;
+
+
+procedure Tfrmconsulta.GrdListagemDblClick(Sender: TObject);
+begin
+BntConfirma.Click;
+end;
+
+procedure Tfrmconsulta.GrdListagemDrawColumnCell(Sender: TObject;
+  const Rect: TRect; DataCol: Integer; Column: TColumn; State: TGridDrawState);
+begin
+if not odd(DsListagem.DataSet.RecNo) then
+  if not (gdSelected in State) then
+    begin
+     grdListagem.Canvas.Brush.Color:=$00FFEFDF;
+     grdListagem.Canvas.FillRect(Rect);
+     grdListagem.DefaultDrawDataCell(rect,Column.Field,State);
+    end;
+end;
+
+procedure Tfrmconsulta.GrdListagemKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+BloqueiaCTRL_DEL_DBGrid(Key, Shift);
+end;
+
+procedure Tfrmconsulta.GrdListagemTitleClick(Column: TColumn);
+begin
+ IndiceAtual                :=Column.FieldName;
+ QryListagem.IndexFieldNames:=IndiceAtual;
+ ExibirLabelIndice(IndiceAtual, GroupBoxPesq);
+end;
+
+procedure Tfrmconsulta.MskPesquisaChange(Sender: TObject);
+begin
+QryListagem.Locate(IndiceAtual, TMaskEdit(Sender).Text,[loPartialKey])
+end;
+
+end.

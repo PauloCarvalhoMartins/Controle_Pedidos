@@ -1,0 +1,68 @@
+unit Controller.Biblioteca;
+
+interface
+
+Uses
+  Vcl.Controls,
+  Vcl.Forms,
+  Vcl.StdCtrls,
+  Vcl.Dialogs;
+
+type
+ TEstadoDoCadastro = (ecInserir, ecAlterar, ecNenhum);
+ function MessageDlgCheck(Msg: string; AType: TMsgDlgType;
+     AButtons: TMsgDlgButtons; IndiceHelp: Integer; DefButton: TMOdalResult;
+     Portugues: Boolean): Word;
+
+implementation
+
+function MessageDlgCheck(Msg: string; AType: TMsgDlgType; AButtons:
+  TMsgDlgButtons;IndiceHelp: LongInt; DefButton: TMOdalResult; Portugues: Boolean): Word;
+var
+  I: Integer;
+  Mensagem: TForm;
+begin
+  Mensagem := CreateMessageDialog(Msg, AType, Abuttons);
+  Mensagem.HelpContext := IndiceHelp;
+  with Mensagem do
+  begin
+    for i := 0 to ComponentCount - 1 do
+    begin
+      if (Components[i] is TButton) then
+      begin
+        if (TButton(Components[i]).ModalResult = DefButton) then
+        begin
+          ActiveControl := TWincontrol(Components[i]);
+        end;
+      end;
+    end;
+    if Portugues then
+    begin
+      if Atype = mtConfirmation then
+        Caption := 'Confirmação'
+      else if AType = mtWarning then
+        Caption := 'Aviso'
+      else if AType = mtError then
+        Caption := 'Erro'
+      else if AType = mtInformation then
+        Caption := 'Informação';
+    end;
+  end;
+  if Portugues then
+  begin
+    TButton(Mensagem.FindComponent('YES')).Caption := '&Sim';
+    TButton(Mensagem.FindComponent('NO')).Caption := '&Não';
+    TButton(Mensagem.FindComponent('CANCEL')).Caption := '&Cancelar';
+    TButton(Mensagem.FindComponent('ABORT')).Caption := '&Abortar';
+    TButton(Mensagem.FindComponent('RETRY')).Caption := '&Repetir';
+    TButton(Mensagem.FindComponent('IGNORE')).Caption := '&Ignorar';
+    TButton(Mensagem.FindComponent('ALL')).Caption := '&Todos';
+    TButton(Mensagem.FindComponent('HELP')).Caption := 'A&juda';
+    TButton(Mensagem.FindComponent('YesToAll')).Caption := '&Sim';
+    TButton(Mensagem.FindComponent('NoToAll')).Caption := '&Não';
+  end;
+  Result := Mensagem.ShowModal;
+  Mensagem.Free;
+end;
+
+end.

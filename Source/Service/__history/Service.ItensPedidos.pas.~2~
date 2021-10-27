@@ -1,0 +1,205 @@
+unit Service.ItensPedidos;
+
+interface
+
+uses
+ System.Classes,
+ System.SysUtils,
+
+ Vcl.Controls,
+ Vcl.ExtCtrls,
+ Vcl.Dialogs,
+
+ FireDAC.Comp.Client,
+ FireDAC.Stan.Param,
+
+ Controller.Biblioteca;
+
+type
+  TItenPedido = class
+
+  private
+    F_ConexaoDB:TFDConnection;
+    F_codigo:Integer;
+    F_numpedido:Integer;
+    F_codcliente:Integer;
+    F_quantidade:Integer;
+    F_vlunitario:Double;
+    F_vltotal:Double;
+  public
+    constructor Create(aConexao:TFDConnection);
+    destructor Destroy; override;
+    function Inserir:Boolean;
+    function Atualizar:Boolean;
+    function Apagar:Boolean;
+    function Selecionar(id:string):Boolean;
+
+  protected
+    property ConexaoDB :TFDConnection   read F_ConexaoDB   write F_ConexaoDB;
+
+  published
+    property codigo:Integer     read F_codigo write F_codigo;
+    property numpedido:Integer  read F_numpedido write F_numpedido;
+    property codcliente:Integer read F_codcliente write F_codcliente;
+    property quantidade:Integer read F_quantidade write F_quantidade;
+    property vlunitario:Double  read F_vlunitario write F_vlunitario;
+    property vltotal:Double     read F_vltotal write F_vltotal;
+
+end;
+
+implementation
+
+{TItenPedido}
+
+{$region 'Constructor and Destructor'}
+constructor TItenPedido.Create(aConexao:TFDConnection);
+begin
+  ConexaoDB:=aConexao;
+end;
+
+destructor TItenPedido.Destroy;
+begin
+  inherited;
+end;
+{$endRegion}
+
+{$region 'CRUD'}
+function TItenPedido.Inserir: Boolean;
+var Qry:TFDQuery;
+begin
+  try
+    Result:=true;
+    Qry:=TFDQuery.Create(nil);
+    Qry.Connection:=ConexaoDB;
+    Qry.SQL.Clear;
+    Qry.SQL.Add(' INSERT INTO itenspedidos ('+
+                '      codigo'+
+                '      ,numpedido'+
+                '      ,codcliente'+
+                '      ,quantidade'+
+                '      ,vlunitario'+
+                '      ,vltotal'+
+                ')');
+    Qry.SQL.Add(' VALUES ('+
+                '      :codigo '+
+                '      ,:numpedido '+
+                '      ,:codcliente '+
+                '      ,:quantidade '+
+                '      ,:vlunitario '+
+                '      ,:vltotal '+
+                ')');
+    Qry.ParamByName('numpedido').AsInteger := Self.F_numpedido;
+    Qry.ParamByName('codcliente').AsInteger := Self.F_codcliente;
+    Qry.ParamByName('quantidade').AsInteger := Self.F_quantidade;
+    Qry.ParamByName('vlunitario').AsFloat := Self.F_vlunitario;
+    Qry.ParamByName('vltotal').AsFloat := Self.F_vltotal;
+    try
+      ConexaoDB.StartTransaction;
+      Qry.ExecSQL;
+      ConexaoDB.Commit;
+    except
+      ConexaoDB.Rollback;
+      Result:=false;
+    end;
+  finally
+   if Assigned(Qry) then
+      FreeAndNil(Qry);
+  end;
+end;
+
+function TItenPedido.Atualizar: Boolean;
+var Qry:TFDQuery;
+begin
+  try
+    Result:=true;
+    Qry:=TFDQuery.Create(nil);
+    Qry.Connection:=ConexaoDB;
+    Qry.SQL.Clear;
+    Qry.SQL.Add(' UPDATE itenspedidos'+
+                '    SET numpedido=:numpedido '+
+                '       ,codcliente=:codcliente '+
+                '       ,quantidade=:quantidade '+
+                '       ,vlunitario=:vlunitario '+
+                '       ,vltotal=:vltotal '+
+                '      WHERE codigo=:codigo ');
+    Qry.ParamByName('codigo').AsInteger := Self.F_codigo;
+    Qry.ParamByName('numpedido').AsInteger := Self.F_numpedido;
+    Qry.ParamByName('codcliente').AsInteger:= Self.F_codcliente;
+    Qry.ParamByName('quantidade').AsInteger := Self.F_quantidade;
+    Qry.ParamByName('vlunitario').AsFloat := Self.F_vlunitario;
+    Qry.ParamByName('vltotal').AsFloat := Self.F_vltotal;
+    try
+      ConexaoDB.StartTransaction;
+      Qry.ExecSQL;
+      ConexaoDB.Commit;
+    except
+      ConexaoDB.Rollback;
+      Result:=false;
+    end;
+  finally
+   if Assigned(Qry) then
+      FreeAndNil(Qry);
+  end;
+end;
+
+function TItenPedido.Apagar: Boolean;
+var Qry:TFDQuery;
+begin
+  if MessageDlgCheck('Apagar o Registro? ', mtConfirmation, [mbYes,mbNo],0,mryes,True)=mrNo then begin
+     Result:=false;
+     abort;
+  end;
+  try
+    Result:=true;
+    Qry:=TFDQuery.Create(nil);
+    Qry.Connection:=ConexaoDB;
+    Qry.SQL.Clear;
+    Qry.SQL.Add('DELETE FROM itenspedidos'+
+                '      WHERE codigo=:codigo ');
+    Qry.ParamByName('codigo').AsInteger := Self.F_codigo;
+    try
+      ConexaoDB.StartTransaction;
+      Qry.ExecSQL;
+      ConexaoDB.Commit;
+    except
+      ConexaoDB.Rollback;
+      Result:=false;
+    end;
+  finally
+   if Assigned(Qry) then
+      FreeAndNil(Qry);
+  end;
+end;
+
+function TItenPedido.Selecionar(id:string): Boolean;
+var Qry:TFDQuery;
+begin
+  try
+    Result:=true;
+    Qry:=TFDQuery.Create(nil);
+    Qry.Connection:=ConexaoDB;
+    Qry.SQL.Clear;
+    Qry.SQL.Add(' SELECT '+
+                '      codigo '+
+                '      ,numpedido '+
+                '      ,codcliente '+
+                '      ,quantidade '+
+                '      ,vlunitario '+
+                '      ,vltotal '+
+                ' FROM itenspedidos' +
+                ' WHERE codigo=:id ');
+    Qry.ParamByName('Id').AsString:=id;
+    Qry.Open;
+    Self.F_codigo := Qry.FieldByName('codigo').AsInteger;
+    Self.F_numpedido := Qry.FieldByName('numpedido').AsInteger;
+    Self.F_codcliente := Qry.FieldByName('codcliente').AsInteger;
+    Self.F_quantidade := Qry.FieldByName('quantidade').AsInteger;
+    Self.F_vlunitario := Qry.FieldByName('vlunitario').AsFloat;
+    Self.F_vltotal := Qry.FieldByName('vltotal').AsFloat;
+  finally
+   if Assigned(Qry) then
+      FreeAndNil(Qry);
+  end;
+end;
+{$endRegion}
+end.
